@@ -38,7 +38,7 @@ for i, img_url in enumerate(img_urls):
     data.append([i + 1, img_data])
 
 # 创建 Excel 文件并写入图片
-file_path = './store/practice.xlsx'
+file_path = '../store/practice.xlsx'
 sheet_name = 'practice_s5'
 
-acer.fast_save(data, file_path, sheet_name)
+acer.save(data, file_path, sheet_name)

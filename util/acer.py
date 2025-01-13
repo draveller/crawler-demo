@@ -1,7 +1,8 @@
+import csv
 import os
 from datetime import datetime
-from typing import Dict, Tuple, Optional
-from typing import List, Any
+from typing import Dict
+from typing import List, Tuple, Any
 
 from openpyxl import load_workbook, Workbook
 from openpyxl.drawing.image import Image
@@ -53,31 +54,6 @@ def load_or_create_workbook(excel_path: str, sheet_name: str) -> Workbook:
         default_sheet = workbook.active
         default_sheet.title = sheet_name
     return workbook
-
-
-def append_data_to_worksheet(
-        data: List[List[Any]] | Tuple[Tuple[Any, ...], ...] | List[Dict[str, Any]],
-        worksheet: Worksheet
-) -> None:
-    """
-    将数据追加到工作表中，根据数据类型和清除策略处理。
-
-    :param data: 要保存的数据，可以是列表的列表、元组的元组或字典的列表。
-    :param worksheet: 目标 Worksheet 对象。
-    """
-    if not data:
-        return
-
-    # 确保数据为列表形式
-    data_to_write = data if isinstance(data, (list, tuple)) else [data]
-
-    # 追加数据
-    for i, row in enumerate(data_to_write):
-        if isinstance(row, (list, tuple)):
-            _append_row_with_images(worksheet, row, i + 1)
-        else:
-            raise ValueError("数据中包含非列表或元组项。")
-
 
 def _append_row_with_images(worksheet: Worksheet, row: List[Any], row_num: int) -> None:
     """
@@ -143,7 +119,7 @@ def _adjust_row_height(worksheet: Worksheet, row_num: int, image_height: float) 
         worksheet.row_dimensions[row_num].height = height_units
 
 
-def fast_save(
+def save(
         data: List[List[Any]] | Tuple[Tuple[Any, ...], ...],
         excel_path: str | None = None,
         sheet_name: str = 'Sheet1',
@@ -170,10 +146,30 @@ def fast_save(
     [wb.remove(sheet) for sheet in wb.worksheets[:] if clean_mode == 'wb']
     [wb.remove(sheet) for sheet in wb.worksheets[:] if clean_mode == 'ws' and sheet.title == sheet_name]
 
-    # 获取或创建工作表
+    # 获取或创建sheet
     ws = wb[sheet_name] if sheet_name in wb.sheetnames else wb.create_sheet(sheet_name)
-
-    append_data_to_worksheet(data, ws)
-
+    # 写入数据到sheet中
+    [_append_row_with_images(ws, row, i + 1) for i, row in enumerate(data) if data]
     # 保存工作簿
     wb.save(excel_path)
+
+
+def save_csv(data: List[List[Any]] | Tuple[Tuple[Any, ...], ...], csv_path: str):
+    """
+    将二维列表或二维元组保存为 CSV 文件。
+
+    :param data: 要保存的数据，可以是二维列表或二维元组。
+    :param csv_path: CSV 文件路径。如果为 None，则保存为 'output.csv'。
+    """
+    # 如果未提供 csv_path，使用默认文件名
+    if csv_path is None:
+        csv_path = "output.csv"
+
+    # 写入 CSV 文件
+    try:
+        with open(csv_path, mode='w', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerows(data)
+        print(f"数据已成功保存到 {csv_path}")
+    except Exception as e:
+        print(f"保存 CSV 文件时出错: {e}")

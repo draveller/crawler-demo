@@ -4,6 +4,8 @@ import chardet
 import requests as req
 from bs4 import BeautifulSoup
 
+from util import acer
+
 """
 爬取当当网好评榜前100本书籍信息
 """
@@ -36,6 +38,8 @@ for i in range(1, 6):
     books = soup.find('ul', class_='bang_list clearfix bang_list_mode').find_all('li')
     all_books += books
 
+
+data = [['序号','书名','作者','价格','评分']]
 # 提取并打印图书数据
 for idx, book in enumerate(all_books):
     # 书名
@@ -49,10 +53,8 @@ for idx, book in enumerate(all_books):
     _ = book.find('div', class_='star').find('span', class_='level').find('span')['style']
     rating = _.replace('width:', '').replace('%', '').replace(';', '').strip()  # 提取评分百分比
 
-    # 打印结果
-    print(f"第 {idx + 1} 号:")
-    print(f"书名: {title}")
-    print(f"作者: {author}")
-    print(f"价格: {price}")
-    print(f"评分: {rating}")
-    print("-" * 50)
+    data.append([idx + 1, title, author, price, rating])
+
+
+# 保存数据到csv文件
+acer.save_csv(data, '../store/dangdang_books.csv')

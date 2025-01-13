@@ -1,7 +1,14 @@
+"""
+使用chardet自动检测编码
+使用requests发送HTTP请求
+使用BeautifulSoup解析HTML页面
+"""
+
 import chardet
-import pandas as pd
 import requests as req
 from bs4 import BeautifulSoup
+
+from util import acer
 
 target_url = 'https://www.spiderbuf.cn/playground/s01'
 
@@ -16,11 +23,6 @@ body = soup.select_one('tbody').select('tr')
 head_texts = [e.text for e in head.select('th')]
 body_texts_rows = [[e.text for e in row.select('td')] for row in body]
 
-# 组合成dict:
-data = [dict(zip(head_texts, row)) for row in body_texts_rows]
-
-for element in data:
-    print('element', element)
-
 # 存入 ./store/practice.xlsx 的名为 'practice_s1' 的sheet页
-pd.DataFrame(data).to_excel('./store/practice.xlsx', sheet_name='practice_s1', index=False)
+data_2d = [head_texts] + body_texts_rows
+acer.save(data_2d, '../store/practice.xlsx', 'practice_s1')

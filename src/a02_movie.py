@@ -73,7 +73,7 @@ for idx, movie in enumerate(all_movies):
 df = pd.DataFrame(movies_data)
 
 # 定义存储路径
-output_dir = './store'
+output_dir = '../store'
 output_file = os.path.join(output_dir, 'data.xlsx')
 
 # 检查存储路径是否存在，如果不存在则创建

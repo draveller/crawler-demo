@@ -1,12 +1,13 @@
-import time
+"""
+添加请求头, 避免被检测为爬虫
+"""
 
 import chardet
+import pandas as pd
 import requests as req
 from bs4 import BeautifulSoup
 
-from util import acer
-
-base_url = 'https://www.spiderbuf.cn/playground/s04'
+target_url = 'https://www.spiderbuf.cn/playground/s02'
 
 headers = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -28,30 +29,25 @@ headers = {
     "sec-ch-ua-platform": '"Windows"'
 }
 
-data = []
-head_texts = []
-for page_no in range(1, 6):
+response = req.get(target_url, headers=headers)
+response.encoding = chardet.detect(response.content)['encoding']
+if response.status_code != 200:
+    print('请求失败, 结果:', response)
+    exit()
 
-    target_url = base_url + '?pageno=' + str(page_no)
-    response = req.get(target_url, headers=headers)
-    response.encoding = chardet.detect(response.content)['encoding']
-    if response.status_code != 200:
-        print('请求失败, 结果:', response)
-        exit()
+soup = BeautifulSoup(response.text, 'lxml')
+head = soup.select_one('thead').select_one('tr')
+body = soup.select_one('tbody').select('tr')
 
-    soup = BeautifulSoup(response.text, 'lxml')
-    head = soup.select_one('thead').select_one('tr')
-    body = soup.select_one('tbody').select('tr')
+# 列表推导式:
+head_texts = [e.text for e in head.select('th')]
+body_texts_rows = [[e.text for e in row.select('td')] for row in body]
 
-    # 列表推导式:
-    head_texts = ['页码'] + [e.text for e in head.select('th')]
-    body_texts_rows = [[page_no] + [e.text for e in row.select('td')] for row in body]
+# 组合成dict:
+data = [dict(zip(head_texts, row)) for row in body_texts_rows]
 
-    # 组合成二维数组:
-    data += body_texts_rows
-    # 休眠1秒钟
-    time.sleep(1)
+for element in data:
+    print('element', element)
 
-# 存入excel
-data_include_head = [head_texts] + data
-acer.fast_save(data_include_head, './store/practice.xlsx', 'practice_s4')
+# 存入 ./store/practice.xlsx 的名为 'practice_s1' 的sheet页
+pd.DataFrame(data).to_excel('../store/practice.xlsx', sheet_name='practice_s2', index=False)
