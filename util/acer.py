@@ -150,6 +150,8 @@ def save(
     ws = wb[sheet_name] if sheet_name in wb.sheetnames else wb.create_sheet(sheet_name)
     # 写入数据到sheet中
     [_append_row_with_images(ws, row, i + 1) for i, row in enumerate(data) if data]
+    # 将sheet移动到最前
+    wb.move_sheet(ws, offset=-wb.index(ws))
     # 保存工作簿
     wb.save(excel_path)
 
