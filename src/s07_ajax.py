@@ -1,15 +1,12 @@
 import json
-from io import BytesIO
 
 import chardet
 import requests as req
-from bs4 import BeautifulSoup
-from openpyxl.drawing.image import Image
 
 from util import acer
 
 """
-带iframe的页面源码分析及数据爬取
+爬取使用ajax动态获取数据的页面
 """
 
 # 目标 URL

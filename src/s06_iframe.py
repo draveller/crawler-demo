@@ -1,9 +1,6 @@
-from io import BytesIO
-
 import chardet
 import requests as req
 from bs4 import BeautifulSoup
-from openpyxl.drawing.image import Image
 
 from util import acer
 
