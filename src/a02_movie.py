@@ -3,7 +3,7 @@
 import os
 from datetime import datetime
 
-import chardet
+from charset_normalizer import detect
 import pandas as pd
 import requests as req
 from bs4 import BeautifulSoup
@@ -23,7 +23,7 @@ for i in range(1, 6):
     # 发送HTTP请求
     session = req.Session()
     response = session.get(url)
-    response.encoding = chardet.detect(response.content)['encoding']
+    response.encoding = detect(response.content)['encoding']
 
     # 检查请求是否成功
     if response.status_code != 200:
