@@ -57,5 +57,5 @@ img_of_openpyxl = Image(image_stream)
 data = [['序号', '图片'], [1, img_of_openpyxl]]
 
 # 创建 Excel 文件并写入图片
-file_path = '../store/practice_h02.xlsx'
+file_path = '../store/practice_n02.xlsx'
 acer.save(data, file_path)
