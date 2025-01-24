@@ -47,8 +47,8 @@ if response.status_code != 200:
     exit()
 
 # 表头
-data = [["电影名称", "封面图片链接", "豆瓣电影评分", "导演", "编剧", "主演", "类型",
-         "制片国家/地区", "语言", "上映日期", "片长", "又名", "IMDb", '详情']]
+data = [["电影名称", "封面图片", "豆瓣电影评分", "导演", "编剧", "主演", "类型",
+         "制片国家/地区", "语言", "上映日期", "片长", "又名", "IMDb", '简介']]
 
 soup = BeautifulSoup(response.text, 'lxml')
 
@@ -86,6 +86,6 @@ data += rows
 
 # 持久化存储
 file_path = os.path.join(ROOT_PATH, 'store', 'practice.xlsx')
-acer.save(data, file_path, 'practice_h01')
+acer.save(data, file_path, 'practice_h02')
 
 print("数据已成功保存到:", file_path)

@@ -19,7 +19,7 @@ MAX_IMAGE_HEIGHT = 600  # Maximum image height in pixels
 # 常量定义
 BASE_COLUMN_WIDTH = 12  # 基础列宽（英文字符数）
 MIN_ROW_HEIGHT = 15  # 最小行高（点）
-IMAGE_SCALE_FACTOR = 0.8  # 图片缩放系数（占单元格比例）
+IMAGE_SCALE_FACTOR = 0.9  # 图片缩放系数（占单元格比例）
 
 
 def generate_unique_filename(prefix: str = "data", extension: str = ".xlsx") -> str:
@@ -36,15 +36,21 @@ def get_default_path(store_folder: str = "acer_store") -> str:
     return str(store_dir / generate_unique_filename())
 
 
-def load_or_create_workbook(excel_path: str, sheet_name: str) -> Workbook:
+def load_or_create_workbook(excel_path: str) -> Workbook:
     """加载或创建工作簿"""
-    if Path(excel_path).exists():
-        return load_workbook(excel_path)
-
-    wb = Workbook()
-    wb.active.title = sheet_name
-    return wb
-
+    try:
+        if Path(excel_path).exists():
+            try:
+                return load_workbook(excel_path)
+            except PermissionError as e:
+                # 处理文件被占用的情况
+                print(f"\n文件 '{excel_path}' 正在被其他程序占用")
+                raise SystemExit("程序因文件锁定异常终止") from e
+        return Workbook()
+    except Exception as e:
+        # 处理其他异常
+        print(f"\n文件操作失败: {str(e)}, 路径={excel_path}")
+        raise
 
 def _append_row_with_images(worksheet: Worksheet, row: List[Any], row_num: int) -> None:
     """追加行数据并处理图片"""
@@ -170,7 +176,7 @@ def save(
 ) -> None:
     """保存数据到Excel文件"""
     excel_path = excel_path or get_default_path()
-    wb = load_or_create_workbook(excel_path, sheet_name)
+    wb = load_or_create_workbook(excel_path)
 
     # 清理策略
     if clean_mode == 'wb':
@@ -186,11 +192,10 @@ def save(
     for i, row in enumerate(data, start=1):
         _append_row_with_images(ws, row, i)
 
-    # 调整列宽和行高（最后统一处理）
+    # 调整列宽和行高
     _adjust_columns_rows(ws)
 
-    # 移动工作表到首位并保存
-    wb.move_sheet(ws, offset=-wb.index(ws))
+    # 保存工作簿
     wb.save(excel_path)
 
 
