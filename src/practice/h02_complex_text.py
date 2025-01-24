@@ -63,6 +63,9 @@ def analysis_fields(info):
     for line in lines:
         # 去掉属性名称部分，保留属性值
         value = line.split(':', 1)[-1].strip()
+        # 判断value是否只由字母和数字组成, 适配没有'又名'的数据:
+        if value.isalnum() and len(lines) == 10:
+            values.append('')
         values.append(value)
     return values
 
