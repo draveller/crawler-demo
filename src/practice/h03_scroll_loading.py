@@ -10,12 +10,12 @@ from src.config.config import ROOT_PATH
 from src.util import acer
 
 """
-复杂内容解析
+滚动加载
 """
 
 # 目标 URL
 base_url = 'https://www.spiderbuf.cn'
-target_url = 'https://www.spiderbuf.cn/playground/h02'
+target_url = 'https://www.spiderbuf.cn/playground/h03'
 
 # 请求头
 headers = {
@@ -52,8 +52,6 @@ data = [["电影名称", "封面图片", "豆瓣电影评分", "导演", "编剧
 
 soup = BeautifulSoup(response.text, 'lxml')
 
-rows = []
-
 
 def analysis_fields(info):
     # 按换行符分割字符串
@@ -70,7 +68,18 @@ def analysis_fields(info):
     return values
 
 
-for i, element in enumerate(soup.select('body > div:nth-child(2) > div.row > div.col-xs-12.col-lg-12')):
+
+# 请求滚动加载部分的数据
+response1 = req.get('https://www.spiderbuf.cn/playground/h03/5f685274073b', headers=headers)
+response1.encoding = detect(response1.content)['encoding']
+soup1 = BeautifulSoup(response1.text, 'lxml')
+
+origin_data = soup.select('body > div:nth-child(2) div.row > div.col-xs-12.col-lg-12')
+origin_data += soup1.select('div.row > div.col-xs-12.col-lg-12')
+
+print(len(origin_data))
+rows = []
+for i, element in enumerate(origin_data):
     is_top_part = i % 2 == 0
     if is_top_part:
         cover_url = base_url + element.select_one('div.col-xs-3.col-lg-3 > img')['src']
@@ -86,6 +95,6 @@ data += rows
 
 # 持久化存储
 file_path = os.path.join(ROOT_PATH, 'store', 'practice.xlsx')
-acer.save(data, file_path, 'practice_h02')
+acer.save(data, file_path, 'practice_h03')
 
 print("数据已成功保存到:", file_path)

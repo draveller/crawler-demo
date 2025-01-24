@@ -19,7 +19,7 @@ MAX_IMAGE_HEIGHT = 600  # Maximum image height in pixels
 # 常量定义
 BASE_COLUMN_WIDTH = 12  # 基础列宽（英文字符数）
 MIN_ROW_HEIGHT = 15  # 最小行高（点）
-IMAGE_SCALE_FACTOR = 0.9  # 图片缩放系数（占单元格比例）
+IMAGE_SCALE_FACTOR = 1  # 图片缩放系数（占单元格比例）
 
 
 def generate_unique_filename(prefix: str = "data", extension: str = ".xlsx") -> str:
@@ -196,8 +196,11 @@ def save(
     _adjust_columns_rows(ws)
 
     # 保存工作簿
-    wb.save(excel_path)
-
+    try:
+        wb.save(excel_path)
+    except PermissionError:
+        print("保存失败, 请检查文件是否被其他程序打开.")
+        return
 
 def save_csv(data: Union[List[List[Any]], Tuple[Tuple[Any, ...], ...]], csv_path: str = None) -> None:
     """保存数据到CSV文件"""
