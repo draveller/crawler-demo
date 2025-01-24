@@ -50,4 +50,4 @@ for element in data:
     print('element', element)
 
 # 存入 ./store/practice.xlsx 的名为 'practice_s1' 的sheet页
-pd.DataFrame(data).to_excel('../store/practice.xlsx', sheet_name='practice_s2', index=False)
+pd.DataFrame(data).to_excel('../../store/practice.xlsx', sheet_name='practice_s2', index=False)

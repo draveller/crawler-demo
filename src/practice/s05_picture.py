@@ -5,7 +5,7 @@ import requests as req
 from bs4 import BeautifulSoup
 from openpyxl.drawing.image import Image
 
-from util import acer
+from src.util import acer
 
 # 目标 URL
 target_url = 'https://www.spiderbuf.cn/playground/s05'
@@ -38,7 +38,7 @@ for i, img_url in enumerate(img_urls):
     data.append([i + 1, img_data])
 
 # 创建 Excel 文件并写入图片
-file_path = '../store/practice.xlsx'
+file_path = '../../store/practice.xlsx'
 sheet_name = 'practice_s5'
 
 acer.save(data, file_path, sheet_name)

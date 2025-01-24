@@ -2,7 +2,7 @@ import chardet
 import requests as req
 from bs4 import BeautifulSoup
 
-from util import acer
+from src.util import acer
 
 """
 爬取需要认证的页面
@@ -35,6 +35,6 @@ body = [[cell.text for cell in row.select('td')] for row in soup.select('tbody >
 data = [header] + body
 
 # 创建 Excel 文件并写入图片
-file_path = '../store/practice.xlsx'
+file_path = '../../store/practice.xlsx'
 sheet_name = 'practice_e2'
 acer.save(data, file_path, sheet_name)

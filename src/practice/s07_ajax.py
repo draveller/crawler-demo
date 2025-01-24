@@ -3,7 +3,7 @@ import json
 import chardet
 import requests as req
 
-from util import acer
+from src.util import acer
 
 """
 爬取使用ajax动态获取数据的页面
@@ -31,6 +31,6 @@ body = [item.values() for item in items]
 data = [header] + body
 
 # 创建 Excel 文件并写入图片
-file_path = '../store/practice.xlsx'
+file_path = '../../store/practice.xlsx'
 sheet_name = 'practice_s7'
 acer.save(data, file_path, sheet_name)

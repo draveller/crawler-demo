@@ -2,7 +2,7 @@ import chardet
 import requests as req
 from bs4 import BeautifulSoup
 
-from util import acer
+from src.util import acer
 
 """
 带iframe的页面源码分析及数据爬取
@@ -40,7 +40,7 @@ head_row = [e.text for e in soup.select_one('body > table > thead > tr').select(
 body_rows = [[t.text for t in e.select('td')] for e in soup.select('body > table > tbody > tr')]
 
 # 创建 Excel 文件并写入图片
-file_path = '../store/practice.xlsx'
+file_path = '../../store/practice.xlsx'
 sheet_name = 'practice_s6'
 
 data = [head_row] + body_rows

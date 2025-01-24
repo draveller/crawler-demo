@@ -2,7 +2,7 @@ import requests as req
 from bs4 import BeautifulSoup
 from charset_normalizer import detect
 
-from util import acer
+from src.util import acer
 
 """
 应对css固定样式偏移反爬
@@ -60,5 +60,5 @@ def parse_row(idx_element):
 data = [[c for c in map(parse_row, enumerate(row.select('h2,p')))] for row in soup.select('div.row > div')]
 
 # 创建 Excel 文件并写入图片
-file_path = '../store/practice_h01.csv'
+file_path = '../../store/practice_h01.csv'
 acer.save_csv(data, file_path)

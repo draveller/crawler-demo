@@ -8,7 +8,7 @@ import chardet
 import requests as req
 from bs4 import BeautifulSoup
 
-from util import acer
+from src.util import acer
 
 target_url = 'https://www.spiderbuf.cn/playground/s01'
 
@@ -25,4 +25,4 @@ body_texts_rows = [[e.text for e in row.select('td')] for row in body]
 
 # 存入 ./store/practice.xlsx 的名为 'practice_s1' 的sheet页
 data_2d = [head_texts] + body_texts_rows
-acer.save(data_2d, '../store/practice.xlsx', 'practice_s1')
+acer.save(data_2d, '../../store/practice.xlsx', 'practice_s1')

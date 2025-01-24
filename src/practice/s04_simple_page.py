@@ -8,7 +8,7 @@ import chardet
 import requests as req
 from bs4 import BeautifulSoup
 
-from util import acer
+from src.util import acer
 
 base_url = 'https://www.spiderbuf.cn/playground/s04'
 
@@ -58,4 +58,4 @@ for page_no in range(1, 6):
 
 # 存入excel
 data_include_head = [head_texts] + data
-acer.save(data_include_head, '../store/practice.xlsx', 'practice_s4')
+acer.save(data_include_head, '../../store/practice.xlsx', 'practice_s4')

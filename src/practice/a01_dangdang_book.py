@@ -4,7 +4,7 @@ import chardet
 import requests as req
 from bs4 import BeautifulSoup
 
-from util import acer
+from src.util import acer
 
 """
 爬取当当网好评榜前100本书籍信息
@@ -57,4 +57,4 @@ for idx, book in enumerate(all_books):
 
 
 # 保存数据到csv文件
-acer.save_csv(data, '../store/dangdang_books.csv')
+acer.save_csv(data, '../../store/dangdang_books.csv')

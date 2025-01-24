@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from charset_normalizer import detect
 from openpyxl.drawing.image import Image
 
-from util import acer
+from src.util import acer
 
 """
 base64转图片
