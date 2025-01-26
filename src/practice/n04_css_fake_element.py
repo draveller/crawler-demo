@@ -9,7 +9,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 from src.config.config import ROOT_PATH
-from src.util import acer
+from src.util import acer, ster
 
 """
 破解css伪元素反爬
@@ -80,19 +80,6 @@ kv_map = {
     "umdrtk.after": "2"
 }
 
-
-def get_mid(text, start, end):
-    if end == '':
-        return text.split(start)[-1]
-
-    # 构建正则表达式，注意 re.DOTALL 用于匹配多行内容
-    pattern = re.compile(f"{re.escape(start)}(.*?){re.escape(end)}", re.DOTALL)
-    match = pattern.search(text)
-    if match:
-        return match.group(1).strip()  # 返回匹配的内容，并去除首尾空白
-    return None  # 如果没有匹配到，返回 None
-
-
 data = [["电影名称", "封面图片", "豆瓣电影评分", "导演", "编剧", "主演", "类型",
          "制片国家/地区", "语言", "上映日期", "片长", "又名", "IMDb", '简介']]
 
@@ -114,16 +101,16 @@ for i, element in enumerate(soup.select('div.container > div.row > div.col-xs-12
 
         # print(_fields.text,'\n\n\n')
 
-        director = get_mid(_fields.text, '导演:', '\n编剧')
-        writer = get_mid(_fields.text, '编剧:', '\n主演')
-        actor = get_mid(_fields.text, '主演:', '\n类型')
-        movie_type = get_mid(_fields.text, '类型:', '\n制片国家/地区')
-        production_area = get_mid(_fields.text, '制片国家/地区:', '\n语言')
-        language = get_mid(_fields.text, '语言:', '\n上映日期')
-        release_date = get_mid(_fields.text, '上映日期:', '\n片长')
-        running_time = get_mid(_fields.text, '片长:', '\n又名')
-        another_name = get_mid(_fields.text, '又名:', '\nIMDb')
-        imdb = get_mid(_fields.text, 'IMDb:', '')
+        director = ster.ster.get_middledle(_fields.text, '导演:', '\n编剧')
+        writer = ster.get_middle(_fields.text, '编剧:', '\n主演')
+        actor = ster.get_middle(_fields.text, '主演:', '\n类型')
+        movie_type = ster.get_middle(_fields.text, '类型:', '\n制片国家/地区')
+        production_area = ster.get_middle(_fields.text, '制片国家/地区:', '\n语言')
+        language = ster.get_middle(_fields.text, '语言:', '\n上映日期')
+        release_date = ster.get_middle(_fields.text, '上映日期:', '\n片长')
+        running_time = ster.get_middle(_fields.text, '片长:', '\n又名')
+        another_name = ster.get_middle(_fields.text, '又名:', '\nIMDb')
+        imdb = ster.get_middle(_fields.text, 'IMDb:', '')
 
         fields_text = element.select_one('div.col-xs-9.col-lg-9').text
         rows.append([title, cover_img, score, director, writer, actor, movie_type, production_area, language,
@@ -135,6 +122,6 @@ data += rows
 
 # 持久化存储
 file_path = os.path.join(ROOT_PATH, 'store', 'practice.xlsx')
-acer.save(data, file_path, 'practice_h06')
+acer.save(data, file_path, 'practice_n04')
 
 print("数据已成功保存到:", file_path)
