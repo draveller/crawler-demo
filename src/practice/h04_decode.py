@@ -1,12 +1,9 @@
 import json
 import os
 import re
-from io import BytesIO
 
 import requests as req
-from bs4 import BeautifulSoup
 from charset_normalizer import detect
-from openpyxl.drawing.image import Image
 
 from src.config.config import ROOT_PATH
 from src.util import acer
@@ -43,7 +40,7 @@ response.encoding = detect(response.content)['encoding']
 
 # 表头
 
-s = re.search(r'\[.*?]', response.text).group(0)
+s = re.search(r'\[[^]]*]', response.text).group(0)
 # 替换单引号为双引号
 s = re.sub(r"(?<!\\)'", '"', s)
 # 转换十六进制数值（如 0x1 → 1）
@@ -62,7 +59,6 @@ for item in json.loads(s):
             item[key] = int(str(value), 16) if isinstance(value, str) and value.startswith('0x') else value
     print(item)
     data.append(item.values())
-
 
 # 持久化存储
 file_path = os.path.join(ROOT_PATH, 'store', 'practice.xlsx')
