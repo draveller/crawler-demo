@@ -199,8 +199,9 @@ def save(
     try:
         wb.save(excel_path)
     except PermissionError:
-        print("\033[31m保存失败，请检查文件是否被其他程序打开。\033[0m")
-        return
+        # 抛出异常:
+        msg = f"保存失败, 请检查文件 {excel_path} 是否被其他程序打开."
+        raise PermissionError(msg)
 
 def save_csv(data: Union[List[List[Any]], Tuple[Tuple[Any, ...], ...]], csv_path: str = None) -> None:
     """保存数据到CSV文件"""
