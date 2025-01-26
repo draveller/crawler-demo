@@ -1,9 +1,10 @@
 import os
-import time
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from src.config.config import ROOT_PATH
 from src.util import acer
@@ -40,8 +41,11 @@ driver.execute_script('''
 
 # 访问目标页面
 driver.get('https://www.spiderbuf.cn/playground/h06')
-# 时停2s以使页面加载完成
-time.sleep(2)
+# 等待页面加载完成
+WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.CSS_SELECTOR, '#dataContent > thead > tr > td'))
+)
+
 elements = driver.find_elements(By.CSS_SELECTOR, '#dataContent > thead > tr')
 
 data = []
@@ -57,4 +61,3 @@ file_path = os.path.join(ROOT_PATH, 'store', 'practice.xlsx')
 acer.save(data, file_path, 'practice_h06')
 
 print("数据已成功保存到:", file_path)
-
