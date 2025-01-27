@@ -19,7 +19,7 @@ WebDriverWait(driver, 10).until(
 
 # 获取总页数
 page_buttons = driver.find_elements(By.CSS_SELECTOR, 'ul.pagination > li > a')
-total_pages = len(page_buttons) - 1  # 排除"Next"按钮
+total_pages = len(page_buttons) - 1
 
 data = [['排名', '企业估值（亿元）', '企业信息', 'CEO', '行业']]
 
